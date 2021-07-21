@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lagou.dao.PromotionAdMapper">
+    <resultMap id="adspace" type="com.lagou.domain.PromotionAd">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"/>
+        <result property="spaceId" column="spaceId"/>
+        <result property="keyword" column="keyword"/>
+        <result property="htmlContent" column="htmlContent"/>
+        <result property="text" column="text"/>
+        <result property="link" column="link"/>
+        <result property="startTime" column="startTime"/>
+        <result property="endTime" column="endTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="img" column="img"/>
+        <!--column="spaceId"是第一次查询传递的参数，也是从表外键字段
+        可以用collection也可以用association-->
+        <collection property="promotionSpace" select="com.lagou.dao.PromotionSpaceMapper.findPromotionSpaceById"
+                    column="spaceId" javaType="com.lagou.domain.PromotionSpace"></collection>
+    </resultMap>
+    <!--/*分页查询广告信息*/-->
+    <select id="findAllPromotionAdByPage" resultMap="adspace">
+        select * from promotion_ad
+    </select>
+
+    <!--/*广告动态上下线*/-->
+    <update id="updatePromotionAdStatus">
+        UPDATE promotion_ad SET STATUS = #{status} ,updatetime = #{updateTime} WHERE id = #{id}
+    </update>
+
+</mapper>

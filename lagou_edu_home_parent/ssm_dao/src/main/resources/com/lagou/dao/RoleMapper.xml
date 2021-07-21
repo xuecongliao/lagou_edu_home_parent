@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lagou.dao.RoleMapper">
+    <!--/*查询所有角色&条件*/-->
+    <select id="findAllRole" parameterType="com.lagou.domain.Role" resultType="com.lagou.domain.Role">
+        SELECT
+            *
+        FROM roles
+    <where>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+    </where>
+    </select>
+
+
+    <!--根据角色ID查询菜单信息-->
+    <select id="findMenuByRoleId" resultType="java.lang.String">
+        SELECT
+            m.`id`
+        FROM roles r
+            LEFT JOIN role_menu_relation rm ON r.id =rm.`role_id`
+            LEFT JOIN menu m ON rm.`menu_id` = m.`id`
+        WHERE r.id = #{id}
+    </select>
+
+    <!--/*根据roleid清空中间表原有的关联信息*/-->
+    <delete id="deleteRoleContextMenu">
+        delete from role_menu_relation where role_id=#{rid}
+    </delete>
+    <!--/*为角色分配菜单信息*/-->
+    <insert id="roleContextMenu">
+        insert into
+        role_menu_relation
+        values(
+            null,
+            #{menuId},
+            #{roleId},
+            #{createdTime},
+            #{updatedTime},
+            #{createdBy},
+            #{updatedby}
+            )
+    </insert>
+
+    <!--删除角色-->
+    <delete id="deleteRole">
+        delete from roles where id=#{roleid}
+    </delete>
+
+
+</mapper>
